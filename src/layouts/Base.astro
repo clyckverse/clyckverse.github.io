@@ -151,15 +151,29 @@ const { identity, nav, footer, preloaderWords } = site;
         });
       }
 
-      // horizontal scroll-pan (Field Journal) — vertical scroll travels sideways
+      // horizontal scroll-pan (Field Journal) — init AFTER load so images
+      // have painted and track.scrollWidth is the real full width.
       const pan = document.querySelector<HTMLElement>('[data-photo]');
       const track = document.querySelector<HTMLElement>('[data-photo-track]');
       if (pan && track && !reduce && wide) {
-        const dist = () => Math.max(0, track.scrollWidth - window.innerWidth + 80);
-        gsap.to(track, {
-          x: () => -dist(), ease: 'none',
-          scrollTrigger: { trigger: pan, start: 'top top', end: () => '+=' + dist(), pin: true, scrub: 1, invalidateOnRefresh: true },
-        });
+        const initPan = () => {
+          // Distance = how far the track needs to travel so its RIGHT edge
+          // aligns with the viewport right edge (the CSS padding-inline on the
+          // track already gives breathing room at both ends).
+          const dist = () => Math.max(0, track.scrollWidth - window.innerWidth);
+          gsap.to(track, {
+            x: () => -dist(), ease: 'none',
+            scrollTrigger: {
+              trigger: pan, start: 'top top',
+              end: () => '+=' + dist(),
+              pin: true, scrub: 1,
+              invalidateOnRefresh: true,
+            },
+          });
+        };
+        // If images are already loaded use immediately, else wait.
+        if (document.readyState === 'complete') initPan();
+        else window.addEventListener('load', initPan, { once: true });
       }
 
       // sticky-stack (case-study process): cards stack + scale/fade behind the next

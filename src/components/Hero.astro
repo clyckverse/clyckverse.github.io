@@ -180,12 +180,14 @@ const heroMobile = listVideos('mobile');
     compute();
 
     const loop = () => {
-      current += (target - current) * 0.08;
+      current += (target - current) * 0.12;   // faster lerp → less lag
       if (ready && video.duration && !seeking) {
         const t = current * SCRUB_END * video.duration;
-        if (Math.abs(video.currentTime - t) > 0.01) {
+        if (Math.abs(video.currentTime - t) > 0.04) {  // skip tiny seeks
           seeking = true;
-          video.currentTime = t;
+          // fastSeek() is much cheaper than currentTime= (less decode work)
+          if ((video as any).fastSeek) (video as any).fastSeek(t);
+          else video.currentTime = t;
         }
       }
       requestAnimationFrame(loop);
