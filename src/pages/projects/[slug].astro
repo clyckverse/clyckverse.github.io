@@ -234,7 +234,13 @@ const { p, next } = Astro.props;
 </style>
 
 <script>
-  import '@google/model-viewer';
+  // Load model-viewer web component from CDN (cannot be bundled by Rollup)
+  if (!customElements.get('model-viewer')) {
+    const s = document.createElement('script');
+    s.type = 'module';
+    s.src = 'https://ajax.googleapis.com/ajax/libs/model-viewer/4.0.0/model-viewer.min.js';
+    document.head.appendChild(s);
+  }
   // Load the light model on phones, the high-detail one on desktop.
   const lo = window.matchMedia('(max-width: 760px)').matches;
   document.querySelectorAll('[data-mv]').forEach((mv) => {
