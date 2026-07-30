@@ -1,0 +1,165 @@
+/* ============================================================
+  Architecture Portfolio — Design System
+  Warm, crafted, architectural. Parchment + ink + terracotta.
+  ============================================================ */
+
+
+/* Self-host these in production (Fontshare + JetBrains ship webfonts).
+  CDN imports used for the working v1. */
+@import url('https://api.fontshare.com/v2/css?f[]=general-sans@300,400,500,600,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+
+:root {
+ /* palette — "Blueprint": cool neutrals + saturated drafting ink-blue */
+ --paper:      #ecece7;
+ --paper-2:    #e2e2dc;
+ --paper-hi:   #f5f5f1;
+ --ink:        #1f2321;
+ --ink-soft:   #565a57;
+ --ink-faint:  #868a86;
+ --line:       rgba(31, 35, 33, 0.14);
+ --line-soft:  rgba(31, 35, 33, 0.07);
+ --accent:     #2b5aa6;   /* drafting ink-blue */
+ --accent-deep:#1c3f7a;
+ --accent-lite:#6f9fd8;
+ /* backward-compatible aliases (components reference --terra*) */
+ --terra:      var(--accent);
+ --terra-deep: var(--accent-deep);
+ --charcoal:   #16181a;
+ --charcoal-2: #1e2124;
+
+
+ /* type — modern, professional sans */
+ --font-display: 'General Sans', system-ui, sans-serif;
+ --font-body:    'General Sans', system-ui, sans-serif;
+ --font-mono:    'JetBrains Mono', ui-monospace, monospace;
+
+
+ /* rhythm */
+ --pad: clamp(1.25rem, 5vw, 6rem);
+ --section-y: clamp(5rem, 12vh, 10rem);
+ --maxw: 1500px;
+
+
+ /* motion */
+ --ease: cubic-bezier(0.22, 1, 0.36, 1);
+ --ease-soft: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+
+html { -webkit-text-size-adjust: 100%; }
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+
+
+body {
+ background-color: var(--paper);
+ color: var(--ink);
+ font-family: var(--font-body);
+ font-weight: 400;
+ line-height: 1.6;
+ -webkit-font-smoothing: antialiased;
+ text-rendering: optimizeLegibility;
+ overflow-x: hidden;
+ /* subtle paper grain */
+ background-image:
+   radial-gradient(circle at 15% 12%, rgba(255,255,255,0.35), transparent 45%),
+   radial-gradient(circle at 85% 88%, rgba(140,120,90,0.10), transparent 50%),
+   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+ background-attachment: fixed;
+}
+
+
+img, video, model-viewer, svg { display: block; max-width: 100%; }
+a { color: inherit; text-decoration: none; }
+::selection { background: var(--terra); color: var(--paper-hi); }
+
+
+/* ---------- typography ---------- */
+.display {
+ font-family: var(--font-display);
+ font-weight: 400;
+ line-height: 0.95;
+ letter-spacing: -0.02em;
+ font-optical-sizing: auto;
+}
+.eyebrow {
+ font-family: var(--font-mono);
+ font-size: 0.72rem;
+ letter-spacing: 0.28em;
+ text-transform: uppercase;
+ color: var(--terra-deep);
+}
+.lead {
+ font-family: var(--font-display);
+ font-weight: 300;
+ font-size: clamp(1.5rem, 3.4vw, 2.6rem);
+ line-height: 1.28;
+ letter-spacing: -0.01em;
+}
+.muted { color: var(--ink-soft); }
+.mono  { font-family: var(--font-mono); }
+
+
+/* ---------- layout ---------- */
+.wrap { max-width: var(--maxw); margin-inline: auto; padding-inline: var(--pad); }
+.section { padding-block: var(--section-y); position: relative; }
+.section-head { display: flex; align-items: baseline; gap: 1rem; margin-bottom: clamp(2rem, 5vw, 4rem); }
+.section-head .idx { font-family: var(--font-mono); font-size: 0.8rem; color: var(--ink-faint); }
+.rule { height: 1px; background: var(--line); border: 0; }
+
+
+/* ---------- buttons ---------- */
+.btn {
+ display: inline-flex; align-items: center; gap: 0.6rem;
+ font-family: var(--font-mono); font-size: 0.78rem; letter-spacing: 0.12em;
+ text-transform: uppercase;
+ padding: 0.85rem 1.4rem; border-radius: 999px;
+ border: 1px solid var(--ink); color: var(--ink);
+ background: transparent;
+ transition: background .5s var(--ease), color .5s var(--ease), transform .5s var(--ease);
+ cursor: pointer;
+}
+.btn:hover { background: var(--ink); color: var(--paper-hi); }
+.btn--solid { background: var(--terra); border-color: var(--terra); color: var(--paper-hi); }
+.btn--solid:hover { background: var(--terra-deep); border-color: var(--terra-deep); transform: translateY(-2px); }
+.btn--ghost-light { border-color: rgba(237,228,211,0.4); color: var(--paper-hi); }
+.btn--ghost-light:hover { background: var(--paper-hi); color: var(--charcoal); }
+
+
+.pill {
+ display: inline-flex; align-items: center; gap: 0.5rem;
+ font-family: var(--font-mono); font-size: 0.68rem; letter-spacing: 0.1em;
+ text-transform: uppercase;
+ padding: 0.35rem 0.8rem; border: 1px solid var(--line); border-radius: 999px;
+ color: var(--ink-soft);
+}
+.pill .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--terra); box-shadow: 0 0 0 3px rgba(180,85,58,0.2); }
+
+
+/* ---------- reveal (GSAP falls back gracefully) ---------- */
+[data-reveal] { opacity: 0; transform: translateY(28px); }
+.no-js [data-reveal], .reveal-done [data-reveal] { opacity: 1; transform: none; }
+
+
+/* ---------- dark section ---------- */
+.dark { background: var(--charcoal); color: var(--paper); }
+/* when the hero merges the intro into its dissolve, drop the standalone intro */
+.hero-merged #intro { display: none; }.dark .muted { color: rgba(237,228,211,0.62); }
+.dark .rule { background: rgba(237,228,211,0.14); }
+.dark .eyebrow { color: #d98a6f; }
+
+
+@media (prefers-reduced-motion: reduce) {
+ * { animation-duration: 0.001ms !important; transition-duration: 0.001ms !important; }
+ [data-reveal] { opacity: 1 !important; transform: none !important; }
+}
+
+
+
+
+

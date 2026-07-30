@@ -1,0 +1,262 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import WorkGallery from '../components/react/WorkGallery.tsx';
+import site from '../data/site.json';
+import photos from '../data/photos.json';
+import { getProjects } from '../lib/projects';
+
+
+const projects = getProjects();
+const workItems = projects.map((p) => ({
+  slug: p.slug,
+  title: p.title,
+  year: p.year,
+  type: p.type,
+  location: p.location,
+  summary: p.summary,
+  tags: p.tags,
+  hero: p.hero,
+}));
+
+
+const { intro, work, photography, about, contact, identity } = site;
+
+
+const fmtDate = (d: string) =>
+  new Date(d).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' });
+---
+<Base>
+  <Hero />
+
+
+  <!-- ================= INTRO / STATEMENT ================= -->
+  <section class="section intro" id="intro">
+    <div class="wrap">
+      <p class="lead intro__lead" data-reveal set:html={intro.leadHtml}></p>
+      <div class="intro__skills" data-reveal data-delay="0.1">
+        {intro.skills.map((s) => (
+          <span class="intro__skill mono">{s}</span>
+        ))}
+      </div>
+    </div>
+  </section>
+
+
+  <div class="bridge bridge--down" aria-hidden="true"></div>
+
+
+  <!-- ================= WORK (paginated, animated) ================= -->
+  <section class="section work dark" id="work">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="idx">01 — {String(projects.length).padStart(2, '0')}</span>
+        <h2 class="display work__h" data-reveal>{work.heading}</h2>
+      </div>
+      <WorkGallery client:load projects={workItems} pageSize={work.pageSize} />
+    </div>
+  </section>
+
+
+  <!-- ================= PHOTOGRAPHY (horizontal field journal) ================= -->
+  <section class="section photo dark" id="photography" data-photo>
+    <div class="wrap photo__head">
+      <div class="section-head">
+        <span class="idx">02</span>
+        <h2 class="display" data-reveal>{photography.heading}</h2>
+      </div>
+      <p class="lead photo__intro muted" data-reveal>{photography.intro}</p>
+      <p class="mono photo__hint" data-reveal>{photography.hint}</p>
+    </div>
+    <div class="photo__scroller">
+      <div class="photo__track" data-photo-track>
+        {photos.map((ph, i) => (
+          <figure class="shot"
+            data-src={ph.src} data-loc={ph.location} data-date={fmtDate(ph.date)} data-cap={ph.caption}>
+            <img src={ph.src} alt={ph.caption} loading="lazy" />
+            <figcaption>
+              <span class="shot__loc">{ph.location}</span>
+              <span class="shot__date mono">{fmtDate(ph.date)}</span>
+            </figcaption>
+            <span class="shot__idx mono">0{i + 1}</span>
+          </figure>
+        ))}
+      </div>
+    </div>
+  </section>
+
+
+  <div class="bridge bridge--up" aria-hidden="true"></div>
+
+
+  <!-- ================= ABOUT ================= -->
+  <section class="section about" id="about">
+    <div class="wrap about__grid">
+      <div class="about__portrait" data-reveal data-parallax-scope>
+        <img src={about.portrait} alt={`Illustrated portrait of ${identity.name}`} loading="lazy" data-parallax="-8" />
+        <span class="pill about__status"><span class="dot"></span> {about.statusPill}</span>
+        <span class="about__imgnote mono">{about.portraitNote}</span>
+      </div>
+      <div class="about__text">
+        <p class="lead" data-reveal>{about.lead}</p>
+        <p class="about__body muted" data-reveal data-delay="0.1">{about.body}</p>
+        <div class="about__list" data-reveal data-delay="0.12">
+          {about.facts.map((f) => (
+            <div><span class="mono muted">{f.label}</span><p>{f.value}</p></div>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================= CONTACT ================= -->
+  <section class="section contact dark" id="contact">
+    <div class="wrap contact__inner">
+      <h2 class="display contact__h" data-reveal set:html={contact.heading.replace('\n', '<br/>')}></h2>
+      <a class="contact__mail display" href={`mailto:${identity.email}`} data-reveal data-delay="0.05" data-magnetic="0.25">{identity.email}</a>
+      <div class="contact__row" data-reveal data-delay="0.1">
+        <a class="btn btn--solid" href={`mailto:${identity.email}`} data-magnetic="0.4">Email me</a>
+        <a class="btn btn--ghost-light" href={identity.instagram} target="_blank" rel="noopener" data-magnetic="0.4">Instagram ↗</a>
+        <span class="pill" style="color:var(--paper-hi);border-color:rgba(237,228,211,0.3)"><span class="dot"></span> {contact.availability}</span>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================= LIGHTBOX ================= -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox__close" aria-label="Close">✕</button>
+    <figure class="lightbox__fig">
+      <img id="lb-img" src="" alt="" />
+      <figcaption class="lightbox__cap">
+        <span id="lb-loc" class="lightbox__loc"></span>
+        <span id="lb-date" class="mono"></span>
+        <span id="lb-cap" class="muted"></span>
+      </figcaption>
+    </figure>
+  </div>
+</Base>
+
+
+<style>
+  /* INTRO */
+  .intro__lead { max-width: 22ch; font-size: clamp(2rem, 6vw, 4.5rem); font-weight: 300; margin-top: 1.5rem; }
+  .intro__lead { max-width: 20ch; }
+  .intro__lead em { font-style: italic; color: var(--terra-deep); }
+  .intro__skills { display: flex; flex-wrap: wrap; gap: 0.6rem 1.4rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+  .intro__skill { font-size: 0.8rem; color: var(--ink-soft); letter-spacing: 0.05em; }
+  .intro__skill::before { content: '— '; color: var(--terra); }
+
+
+  /* WORK */
+  .work__h { font-size: clamp(2.5rem, 6vw, 5rem); margin-bottom: 2.5rem; }
+
+
+  /* smooth dark<->light section bridges (no more hard cut) */
+  .bridge { height: clamp(90px, 20vh, 220px); pointer-events: none; }
+  .bridge--down { background: linear-gradient(to bottom, var(--paper), var(--charcoal)); }
+  .bridge--up { background: linear-gradient(to bottom, var(--charcoal), var(--paper)); }
+  .proj { display: block; border-top: 1px solid var(--line); padding-block: clamp(2rem, 5vw, 4rem); transition: background .5s var(--ease); }
+  .proj:last-child { border-bottom: 1px solid var(--line); }
+  .proj:hover { background: var(--paper-hi); }
+  .proj__inner { display: grid; grid-template-columns: auto 1.1fr 1fr; gap: clamp(1.5rem, 4vw, 4rem); align-items: center; }
+  .proj__num { color: var(--ink-faint); font-size: 0.85rem; align-self: start; padding-top: 0.5rem; }
+  .proj__media { aspect-ratio: 16/10; overflow: hidden; border-radius: 3px; }
+  .proj__media img { width: 100%; height: 120%; object-fit: cover; filter: saturate(0.92) contrast(1.02); }
+  .proj__title { font-size: clamp(2rem, 4vw, 3.4rem); font-weight: 400; }
+  .proj__summary { margin-top: 0.8rem; max-width: 40ch; }
+  .proj__meta { display: flex; flex-wrap: wrap; align-items: center; gap: 0.7rem; margin-top: 1.4rem; }
+  .proj__meta .mono { font-size: 0.75rem; color: var(--ink-faint); }
+  .proj__cta { display: inline-block; margin-top: 1.6rem; color: var(--terra-deep); font-size: 0.8rem; letter-spacing: 0.1em; }
+
+
+  /* PHOTOGRAPHY — horizontal field journal */
+  .photo { overflow: hidden; }
+  .photo__head { margin-bottom: 3rem; }
+  .photo__intro { max-width: 26ch; margin-top: 0.5rem; }
+  .photo__hint { color: var(--accent-lite); font-size: 0.72rem; letter-spacing: 0.22em; margin-top: 1.5rem; text-transform: uppercase; }
+  .photo__scroller { overflow: hidden; }
+  .photo__track { display: flex; gap: 1.4rem; padding-inline: var(--pad); width: max-content; }
+  .shot { flex: 0 0 auto; width: clamp(240px, 34vw, 400px); position: relative; cursor: pointer; overflow: hidden; border-radius: 3px; }
+  .shot img { width: 100%; height: clamp(340px, 58vh, 600px); object-fit: cover; transition: transform 1s var(--ease), filter .8s var(--ease); filter: saturate(0.92) brightness(0.95); }
+  .shot:hover img { transform: scale(1.05); filter: saturate(1.06) brightness(1); }
+  .shot figcaption { position: absolute; inset: auto 0 0 0; display: flex; justify-content: space-between; align-items: flex-end; gap: 1rem; padding: 2.2rem 1rem 1rem; background: linear-gradient(transparent, rgba(10,12,14,0.85)); color: var(--paper-hi); }
+  .shot__loc { font-size: 0.9rem; }
+  .shot__date { font-size: 0.7rem; opacity: 0.75; }
+  .shot__idx { position: absolute; top: 0.9rem; left: 0.9rem; color: rgba(237,237,241,0.85); font-size: 0.72rem; mix-blend-mode: difference; }
+
+
+  /* ABOUT */
+  .about__grid { display: grid; grid-template-columns: 0.85fr 1fr; gap: clamp(2rem, 6vw, 6rem); align-items: center; }
+  .about__portrait { position: relative; aspect-ratio: 4/5; overflow: hidden; border-radius: 3px; }
+  .about__portrait img { width: 100%; height: 115%; object-fit: cover; }
+  .about__status { position: absolute; left: 1rem; bottom: 1rem; background: color-mix(in srgb, var(--paper) 90%, transparent); backdrop-filter: blur(6px); }
+  .about__imgnote { position: absolute; top: 0.9rem; right: 0.9rem; background: rgba(22,24,26,0.72); color: var(--paper-hi); padding: 0.3rem 0.6rem; border-radius: 3px; font-size: 0.6rem; letter-spacing: 0.04em; }
+  .about__body { margin-top: 1.5rem; max-width: 48ch; font-size: 1.05rem; }
+  .about__list { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 2.5rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+  .about__list span { font-size: 0.7rem; display: block; margin-bottom: 0.3rem; }
+  .about__list p { font-size: 0.95rem; }
+
+
+  /* CONTACT */
+  .contact { text-align: center; }
+  .contact__h { font-size: clamp(3rem, 10vw, 8rem); font-weight: 300; line-height: 0.9; margin-top: 1rem; }
+  .contact__mail { display: inline-block; margin-top: 2.5rem; font-size: clamp(1.3rem, 4vw, 2.6rem); border-bottom: 1px solid rgba(237,228,211,0.4); padding-bottom: 0.3rem; transition: color .4s var(--ease), border-color .4s var(--ease); }
+  .contact__mail:hover { color: #e8a488; border-color: #e8a488; }
+  .contact__row { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; align-items: center; margin-top: 2.5rem; }
+
+
+  /* LIGHTBOX */
+  .lightbox { position: fixed; inset: 0; z-index: 90; background: rgba(18,16,12,0.94); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: var(--pad); opacity: 0; pointer-events: none; transition: opacity .4s var(--ease); }
+  .lightbox.open { opacity: 1; pointer-events: auto; }
+  .lightbox__fig { max-width: 1100px; display: flex; flex-direction: column; gap: 1rem; }
+  .lightbox__fig img { max-height: 78vh; width: auto; margin-inline: auto; border-radius: 3px; }
+  .lightbox__cap { display: flex; flex-wrap: wrap; gap: 0.4rem 1.5rem; color: var(--paper-hi); align-items: baseline; }
+  .lightbox__loc { font-family: var(--font-display); font-size: 1.3rem; }
+  .lightbox__cap .muted { color: rgba(237,228,211,0.6); flex-basis: 100%; }
+  .lightbox__close { position: absolute; top: 1.2rem; right: 1.5rem; background: none; border: 1px solid rgba(237,228,211,0.4); color: var(--paper-hi); width: 44px; height: 44px; border-radius: 50%; cursor: pointer; font-size: 1rem; }
+
+
+  @media (max-width: 980px) {
+    .proj__inner { grid-template-columns: auto 1fr; }
+    .proj__media { grid-column: 1 / -1; grid-row: 2; }
+    .about__grid { grid-template-columns: 1fr; }
+    .about__portrait { max-width: 420px; }
+  }
+  @media (max-width: 860px) {
+    .photo__scroller { overflow-x: auto; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+    .photo__track { width: max-content; }
+    .shot { scroll-snap-align: center; width: 78vw; }
+  }
+  @media (max-width: 620px) {
+    .proj__inner { grid-template-columns: 1fr; gap: 1.2rem; }
+    .proj__num { display: none; }
+    .about__list { grid-template-columns: 1fr; gap: 1rem; }
+  }
+</style>
+
+
+<script>
+  const lb = document.getElementById('lightbox')!;
+  const img = document.getElementById('lb-img') as HTMLImageElement;
+  const loc = document.getElementById('lb-loc')!;
+  const date = document.getElementById('lb-date')!;
+  const cap = document.getElementById('lb-cap')!;
+  const open = (el: HTMLElement) => {
+    img.src = el.dataset.src || '';
+    loc.textContent = el.dataset.loc || '';
+    date.textContent = el.dataset.date || '';
+    cap.textContent = el.dataset.cap || '';
+    lb.classList.add('open'); lb.setAttribute('aria-hidden', 'false');
+  };
+  const close = () => { lb.classList.remove('open'); lb.setAttribute('aria-hidden', 'true'); };
+  document.querySelectorAll<HTMLElement>('.shot').forEach((s) => s.addEventListener('click', () => open(s)));
+  lb.addEventListener('click', (e) => { if (e.target === lb || (e.target as HTMLElement).classList.contains('lightbox__close')) close(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+</script>
+
+
+
+
+

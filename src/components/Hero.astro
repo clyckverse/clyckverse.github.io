@@ -1,0 +1,199 @@
+---
+// Scroll-scrubbed cinematic hero — scroll drives the camera through the video
+// (the scroll-world technique). Falls back to a static poster with reduced motion.
+import fs from 'node:fs';
+import path from 'node:path';
+import site from '../data/site.json';
+const { hero, intro, identity } = site;
+
+// Discover ALL hero videos in each folder at build time (any number works).
+const listVideos = (sub: string) => {
+  try {
+    return fs.readdirSync(path.join(process.cwd(), 'public/video', sub))
+      .filter((f) => f.toLowerCase().endsWith('.mp4'))
+      .sort()
+      .map((f) => `/video/${sub}/${f}`);
+  } catch { return []; }
+};
+const heroDesktop = listVideos('desktop');
+const heroMobile = listVideos('mobile');
+---
+<section class="hero" data-hero data-desktop={JSON.stringify(heroDesktop)} data-mobile={JSON.stringify(heroMobile)}>
+  <div class="hero__stage">
+    <div class="hero__media">
+      <img class="hero__poster" src="/video/hero-poster.jpg" alt="Architectural model in warm light" />
+      <video class="hero__video" muted playsinline preload="auto" poster="/video/hero-poster.jpg"></video>
+      <div class="hero__scrim"></div>
+      <div class="hero__grain"></div>
+      <div class="hero__flash" aria-hidden="true"></div>
+      <div class="hero__intro">
+        <div class="wrap">
+          <p class="lead hero__intro-lead" set:html={intro.leadHtml}></p>
+          <div class="hero__intro-skills">
+            {intro.skills.map((s) => <span class="mono">— {s}</span>)}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero__copy wrap">
+      <p class="eyebrow" data-hero-copy>{hero.eyebrow}</p>
+      <h1 class="display hero__title" data-hero-copy>
+        <span>{hero.firstName}</span><span>{hero.lastName}</span>
+      </h1>
+      <p class="hero__tag" data-hero-copy>{hero.tagline}</p>
+      <div class="hero__meta" data-hero-copy>
+        <span class="pill"><span class="dot"></span> {identity.availability}</span>
+      </div>
+    </div>
+
+    <div class="hero__scroll" aria-hidden="true">
+      <span class="mono">Scroll to enter</span>
+      <span class="hero__line"></span>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero { height: 280vh; position: relative; }
+  .hero__stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: var(--charcoal); }
+  .hero__media { position: absolute; inset: 0; }
+  .hero__poster, .hero__video {
+    position: absolute; inset: 0; width: 100%; height: 100%;
+    object-fit: cover; object-position: center;
+  }
+  .hero__video { opacity: 0; transition: opacity .8s var(--ease); }
+  .hero__video.ready { opacity: 1; }
+  .hero__scrim {
+    position: absolute; inset: 0;
+    background:
+      linear-gradient(to top, rgba(20,18,14,0.85) 0%, rgba(20,18,14,0.15) 40%, rgba(20,18,14,0.35) 100%),
+      radial-gradient(120% 80% at 50% 120%, rgba(180,85,58,0.22), transparent 60%);
+  }
+  .hero__grain { position: absolute; inset: 0; mix-blend-mode: overlay; opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E"); }
+  /* dissolves the whole hero into the paper of the next section — one fluid scroll */
+  .hero__flash { position: absolute; inset: 0; background: var(--paper); opacity: 0; pointer-events: none; z-index: 20; }
+  /* the statement the video dissolves into — so the scroll ends ON the intro, no blank */
+  .hero__intro { position: absolute; inset: 0; z-index: 21; display: flex; align-items: center; opacity: 0; color: var(--ink); pointer-events: none; }
+  .hero__intro-lead { max-width: 32ch; font-size: clamp(1.3rem, 2.8vw, 2.2rem); font-weight: 300; line-height: 1.32; }
+  .hero__intro-lead em { font-style: italic; color: var(--accent-deep); }
+  .hero__intro-skills { display: flex; flex-wrap: wrap; gap: 0.5rem 1.4rem; margin-top: 2.5rem; padding-top: 1.8rem; border-top: 1px solid var(--line); }
+  .hero__intro-skills .mono { font-size: 0.78rem; color: var(--ink-soft); }
+
+  .hero__copy { position: absolute; left: 0; right: 0; bottom: clamp(3rem, 10vh, 7rem); color: var(--paper-hi); }
+  .hero__copy .eyebrow { color: #e8a488; margin-bottom: 1.4rem; }
+  .hero__title { font-size: clamp(3.4rem, 15vw, 12rem); font-weight: 300; display: flex; flex-direction: column; }
+  .hero__title span { display: block; overflow: hidden; }
+  .hero__tag { max-width: 30ch; margin-top: 1.6rem; font-size: clamp(1rem, 1.6vw, 1.25rem); color: rgba(237,228,211,0.85); font-weight: 300; }
+  .hero__meta { margin-top: 1.8rem; }
+  .hero__meta .pill { color: var(--paper-hi); border-color: rgba(237,228,211,0.3); }
+
+  .hero__scroll { position: absolute; right: var(--pad); bottom: clamp(3rem, 10vh, 7rem); display: flex; flex-direction: column; align-items: center; gap: 0.8rem; color: rgba(237,228,211,0.7); font-size: 0.7rem; letter-spacing: 0.2em; text-transform: uppercase; }
+  .hero__line { width: 1px; height: 60px; background: linear-gradient(rgba(237,228,211,0.7), transparent); animation: drop 2.2s var(--ease) infinite; transform-origin: top; }
+  @keyframes drop { 0% { transform: scaleY(0); } 40% { transform: scaleY(1);} 100% { transform: scaleY(0); transform-origin: bottom; } }
+
+  @media (max-width: 720px) {
+    .hero__scroll { display: none; }
+    .hero__tag { max-width: 24ch; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero { height: 100vh; }
+    .hero__video { display: none; }
+    .hero__line { animation: none; }
+  }
+</style>
+
+<script>
+  const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const section = document.querySelector<HTMLElement>('[data-hero]');
+  const video = document.querySelector<HTMLVideoElement>('.hero__video');
+  const poster = document.querySelector<HTMLImageElement>('.hero__poster');
+  const flashEl = document.querySelector<HTMLElement>('.hero__flash');
+  const introEl = document.querySelector<HTMLElement>('.hero__intro');
+  const copies = Array.from(document.querySelectorAll<HTMLElement>('[data-hero-copy]'));
+
+  // Scrub range: clean clips use most of the clip; the intro1 fallback skips its garbled tail.
+  let SCRUB_END = 0.95;
+
+  if (section && video && !reduce) {
+    // intro now lives inside the hero end → hide the standalone intro section
+    document.documentElement.classList.add('hero-merged');
+
+    // Pick a random video for this platform from whatever exists in the folder.
+    const isMobile = window.matchMedia('(max-width: 760px)').matches;
+    let list: string[] = [];
+    try { list = JSON.parse(section.dataset[isMobile ? 'mobile' : 'desktop'] || '[]'); } catch (e) {}
+    const primary = list.length
+      ? list[Math.floor(Math.random() * list.length)]
+      : `/video/${isMobile ? 'mobile' : 'desktop'}/hero-1.mp4`;
+
+    // show the poster that matches the randomly picked clip
+    const posterUrl = primary.replace(/\.mp4$/, '-poster.jpg');
+    if (poster) { poster.src = posterUrl; poster.onerror = () => { poster.src = '/video/hero-poster.jpg'; }; }
+    video.poster = posterUrl;
+
+    // Blob load → guarantees the video is fully seekable when scrubbing.
+    const loadBlob = (url: string) =>
+      fetch(url).then((r) => { if (!r.ok) throw new Error('missing'); return r.blob(); })
+        .then((b) => { video.src = URL.createObjectURL(b); });
+
+    loadBlob(primary).catch(() => {
+      SCRUB_END = 0.62; // fallback clip (intro1) — skip its garbled UI tail
+      if (poster) poster.src = '/video/hero-poster.jpg';
+      return loadBlob('/video/hero.mp4').catch(() => { video.src = '/video/hero.mp4'; });
+    });
+
+    let ready = false;
+    video.addEventListener('loadeddata', () => {
+      ready = true;
+      video.classList.add('ready');
+      if (poster) poster.style.opacity = '0';
+    });
+    // iOS: prime the decoder so seeked frames paint
+    const prime = () => { video.play().then(() => video.pause()).catch(() => {}); window.removeEventListener('touchstart', prime); };
+    window.addEventListener('touchstart', prime, { once: true });
+
+    let target = 0, current = 0, seeking = false;
+    const compute = () => {
+      const rect = section.getBoundingClientRect();
+      const total = section.offsetHeight - window.innerHeight;
+      const p = Math.min(1, Math.max(0, -rect.top / total));
+      target = p;
+      // fade copy out over the first 45% of the hero
+      const fade = Math.min(1, p / 0.45);
+      copies.forEach((c, i) => {
+        c.style.opacity = String(1 - fade);
+        c.style.transform = `translateY(${fade * -40 - i * fade * 6}px)`;
+      });
+      // dissolve the hero into paper over the last stretch → seamless into the white section
+      if (flashEl) flashEl.style.opacity = String(Math.min(1, Math.max(0, (p - 0.6) / 0.38)));
+      // reveal the intro statement inside the hero so the video ends ON the intro (no blank gap)
+      if (introEl) {
+        const ip = Math.min(1, Math.max(0, (p - 0.66) / 0.26));
+        introEl.style.opacity = String(ip);
+        introEl.style.transform = `translateY(${(1 - ip) * 26}px)`;
+      }
+    };
+    window.addEventListener('scroll', compute, { passive: true });
+    window.addEventListener('resize', compute);
+    compute();
+
+    const loop = () => {
+      current += (target - current) * 0.08;
+      if (ready && video.duration && !seeking) {
+        const t = current * SCRUB_END * video.duration;
+        if (Math.abs(video.currentTime - t) > 0.01) {
+          seeking = true;
+          video.currentTime = t;
+        }
+      }
+      requestAnimationFrame(loop);
+    };
+    video.addEventListener('seeked', () => { seeking = false; });
+    requestAnimationFrame(loop);
+  }
+</script>
+
+
+

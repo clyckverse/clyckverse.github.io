@@ -1,0 +1,67 @@
+{
+ "title": "Riverside Pavilion",
+ "year": "2025",
+ "type": "Public / Cultural",
+ "role": "Design, drawings, physical model & 3D",
+ "location": "Studio III · Riverfront site",
+ "order": 1,
+ "summary": "A low, cantilevered reading pavilion that lets the river walk straight through it.",
+ "brief": "The brief asked for a small public room on a flood-prone riverbank. Rather than resist the water, the pavilion lifts onto a thin plinth and lets the ground slip beneath a deep cantilever, so the public path never stops. Light enters low and long; the timber core anchors what the glass dissolves.",
+ "note": "The pavilion began as a question: can a public room disappear when the river rises, and reappear when it falls? Everything in the project answers that.",
+ "tools": [
+   "Hand drawing",
+   "AutoCAD",
+   "Physical model",
+   "3D modelling"
+ ],
+ "tags": [
+   "Cantilever",
+   "Timber core",
+   "Public room"
+ ],
+ "model": "model.glb",
+ "hero": "hero.jpg",
+ "render": "render.jpg",
+ "modelPhoto": "model-photo.jpg",
+ "drawings": [
+   {
+     "file": "plan.svg",
+     "caption": "Floor plan · 1:100",
+     "wide": true
+   },
+   {
+     "file": "section.svg",
+     "caption": "Section AA · 1:100"
+   },
+   {
+     "file": "elevation.svg",
+     "caption": "North elevation · 1:100",
+     "wide": true
+   }
+ ],
+ "process": [
+   {
+     "stage": "Concept sketch",
+     "note": "First idea in pencil — the roof as a single held gesture over the path.",
+     "media": "elevation.svg"
+   },
+   {
+     "stage": "Developed drawings",
+     "note": "Plan, section and elevation resolved in AutoCAD to test the cantilever depth.",
+     "media": "plan.svg"
+   },
+   {
+     "stage": "Physical model",
+     "note": "1:100 balsa study to read the light under the overhang.",
+     "media": "model-photo.jpg"
+   },
+   {
+     "stage": "3D model",
+     "note": "Digital massing to check proportion from the approach.",
+     "media": "render.jpg"
+   }
+ ]
+}
+
+
+

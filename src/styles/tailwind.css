@@ -1,0 +1,6 @@
+/* Tailwind v4 — utilities only, NO preflight, so it can't reset/override the
+  bespoke design system in global.css. Lets us drop in framer-motion /
+  skiper / 21st.dev component classes when useful. */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);

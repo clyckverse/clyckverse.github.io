@@ -1,0 +1,246 @@
+---
+import Base from '../../layouts/Base.astro';
+import site from '../../data/site.json';
+import { getProjects } from '../../lib/projects';
+
+export function getStaticPaths() {
+  const sorted = getProjects();
+  return sorted.map((p, i) => ({
+    params: { slug: p.slug },
+    props: { p, next: sorted[(i + 1) % sorted.length] },
+  }));
+}
+
+const { p, next } = Astro.props;
+---
+<Base title={`${p.title} — ${site.identity.name}`}>
+  <article class="case">
+    <!-- header -->
+    <header class="case__head section">
+      <div class="wrap">
+        <a href="/#work" class="case__back mono" data-reveal>← Back to work</a>
+        <p class="eyebrow" data-reveal data-delay="0.05">{p.type} · {p.year}</p>
+        <h1 class="display case__title" data-reveal data-delay="0.08">{p.title}</h1>
+        <p class="lead case__summary" data-reveal data-delay="0.1">{p.summary}</p>
+        <dl class="case__facts" data-reveal data-delay="0.12">
+          <div><dt class="mono muted">Role</dt><dd>{p.role}</dd></div>
+          <div><dt class="mono muted">Location</dt><dd>{p.location}</dd></div>
+          <div><dt class="mono muted">Tools</dt><dd>{p.tools.join(' · ')}</dd></div>
+        </dl>
+      </div>
+    </header>
+
+    <!-- hero image -->
+    <div class="wrap"><div class="case__hero" data-reveal data-parallax-scope>
+      <img src={p.hero} alt={p.title} data-parallax="-8" />
+    </div></div>
+
+    <!-- brief -->
+    <section class="section case__brief">
+      <div class="wrap case__brief-grid">
+        <span class="eyebrow" data-reveal>The idea</span>
+        <p class="case__brief-text" data-reveal data-delay="0.05">{p.brief}</p>
+      </div>
+    </section>
+
+    <!-- INTERACTIVE 3D -->
+    <section class="section case__model dark">
+      <div class="wrap">
+        <div class="section-head">
+          <span class="idx">3D</span>
+          <h2 class="display" data-reveal>Explore the model</h2>
+        </div>
+        <p class="muted case__hint" data-reveal>Drag to orbit · scroll or pinch to zoom. This is the massing model — swap-ready for the real AutoCAD export.</p>
+        <div class="viewer" data-reveal>
+          <model-viewer
+            data-mv
+            data-hi={p.model}
+            data-lo={p.modelLow ?? p.model}
+            alt={`3D model of ${p.title}`}
+            camera-controls
+            auto-rotate
+            auto-rotate-delay="600"
+            rotation-per-second="18deg"
+            interaction-prompt="none"
+            shadow-intensity="1.1"
+            shadow-softness="0.9"
+            exposure="1.1"
+            tone-mapping="neutral"
+            camera-orbit={p.cameraOrbit ?? "30deg 72deg auto"}
+            min-camera-orbit="auto 0deg 25%"
+            max-camera-orbit="auto 95deg 220%"
+            touch-action="pan-y"
+            reveal="auto"
+          ></model-viewer>
+          <span class="viewer__tag mono">{p.title} · massing study</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROCESS — sticky stack -->
+    <section class="case__process" data-stack>
+      <div class="wrap"><div class="section-head process__head"><span class="idx">Process</span><h2 class="display" data-reveal>How it was made</h2></div></div>
+      <div class="stack">
+        {p.process.map((st, i) => (
+          <article class="stack-card">
+            <div class="wrap stack-card__inner">
+              <div class={`stack-card__media ${st.media.includes('.svg') ? 'is-drawing' : ''}`}>
+                <img src={st.media || p.hero} alt={st.stage} loading="lazy" />
+              </div>
+              <div class="stack-card__text">
+                <span class="step__n mono">0{i + 1} / 0{p.process.length}</span>
+                <h3 class="stack-card__stage display">{st.stage}</h3>
+                <p class="muted stack-card__note">{st.note}</p>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+
+    <!-- DRAWINGS + DATA (glass panels over blurred backdrop) -->
+    <section class="case__dwg" style={`--dwgbg: url(${p.render})`}>
+      <div class="case__dwg-bg" aria-hidden="true"></div>
+      <div class="wrap case__dwg-inner">
+        <div class="section-head"><span class="idx">Drawings &amp; data</span><h2 class="display" data-reveal>Plans, sections, numbers</h2></div>
+        <div class="glass-grid">
+          <div class="glass specs" data-reveal>
+            <h3 class="mono specs__h">Project data</h3>
+            <dl class="specs__list">
+              <div><dt class="mono">Year</dt><dd>{p.year}</dd></div>
+              <div><dt class="mono">Type</dt><dd>{p.type}</dd></div>
+              <div><dt class="mono">Location</dt><dd>{p.location}</dd></div>
+              <div><dt class="mono">Role</dt><dd>{p.role}</dd></div>
+              <div><dt class="mono">Tools</dt><dd>{p.tools.join(' · ')}</dd></div>
+            </dl>
+            <div class="specs__tags">{p.tags.map((t) => <span class="pill">{t}</span>)}</div>
+          </div>
+          {p.drawings.map((dw) => (
+            <figure class={`glass ${dw.wide ? 'glass--wide' : ''}`} data-reveal>
+              <div class="glass__media"><img src={dw.src} alt={dw.caption} loading="lazy" /></div>
+              <figcaption class="mono">{dw.caption}</figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+
+    <!-- OUTCOME -->
+    <section class="section case__out">
+      <div class="wrap case__out-grid">
+        <figure data-reveal data-parallax-scope><img src={p.modelPhoto} alt="Physical model" loading="lazy" data-parallax="-6" /><figcaption class="mono muted">Physical study model</figcaption></figure>
+        <figure data-reveal data-delay="0.05" data-parallax-scope><img src={p.render} alt="Final render" loading="lazy" data-parallax="-6" /><figcaption class="mono muted">Final render</figcaption></figure>
+      </div>
+      <div class="wrap case__note">{p.note}</div>
+    </section>
+
+    <!-- NEXT -->
+    <a class="case__next dark" href={`/projects/${next.slug}`}>
+      <div class="wrap case__next-inner">
+        <span class="mono">Next project</span>
+        <h2 class="display">{next.title} →</h2>
+      </div>
+    </a>
+  </article>
+</Base>
+
+<style>
+  .case__head { padding-top: clamp(7rem, 14vh, 11rem); }
+  .case__back { display: inline-block; margin-bottom: 2rem; color: var(--ink-soft); }
+  .case__back:hover { color: var(--terra-deep); }
+  .case__title { font-size: clamp(3rem, 9vw, 7rem); font-weight: 300; margin-top: 1rem; }
+  .case__summary { max-width: 30ch; margin-top: 1.5rem; }
+  .case__facts { display: flex; flex-wrap: wrap; gap: 2.5rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid var(--line); }
+  .case__facts dt { font-size: 0.7rem; margin-bottom: 0.3rem; }
+  .case__facts dd { font-size: 0.95rem; }
+
+  .case__hero { aspect-ratio: 16/9; overflow: hidden; border-radius: 3px; margin-top: 1rem; }
+  .case__hero img { width: 100%; height: 115%; object-fit: cover; }
+
+  .case__brief-grid { display: grid; grid-template-columns: 0.3fr 1fr; gap: 2rem; }
+  .case__brief-text { font-family: var(--font-display); font-weight: 300; font-size: clamp(1.4rem, 3vw, 2.2rem); line-height: 1.35; }
+
+  .case__hint { max-width: 44ch; margin-bottom: 2rem; }
+  .viewer { position: relative; aspect-ratio: 16/10; border-radius: 4px; overflow: hidden; background: radial-gradient(120% 120% at 50% 20%, #2c2820, #16130f); border: 1px solid rgba(237,228,211,0.1); }
+  model-viewer { width: 100%; height: 100%; --poster-color: transparent; }
+  .viewer__tag { position: absolute; left: 1rem; bottom: 1rem; color: rgba(237,228,211,0.6); font-size: 0.72rem; }
+
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; list-style: none; }
+  .step { border-top: 1px solid var(--line); padding-top: 1.2rem; }
+  .step__n { color: var(--accent); font-size: 0.8rem; }
+  .step__stage { font-family: var(--font-display); font-weight: 400; font-size: 1.3rem; margin: 0.6rem 0 0.6rem; }
+
+  /* sticky-stack process */
+  .case__process { padding-top: var(--section-y); position: relative; z-index: 1; background: var(--paper); }
+  .process__head { margin-bottom: 2rem; }
+  .stack-card { min-height: 100dvh; display: flex; align-items: center; background: var(--paper); border-top: 1px solid var(--line); }
+  .stack-card:nth-child(even) { background: var(--paper-2); }
+  .stack-card:last-child { background: var(--paper); }
+  .stack-card__inner { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(2rem, 5vw, 5rem); align-items: center; width: 100%; }
+  .stack-card__media { aspect-ratio: 4/3; overflow: hidden; border-radius: 4px; background: var(--paper-hi); border: 1px solid var(--line); }
+  .stack-card__media img { width: 100%; height: 100%; object-fit: cover; }
+  .stack-card__media.is-drawing img { object-fit: contain; padding: 1.4rem; }
+  .stack-card__text .step__n { color: var(--accent); font-size: 0.85rem; letter-spacing: 0.1em; }
+  .stack-card__stage { font-size: clamp(2rem, 5vw, 4rem); font-weight: 500; margin: 0.8rem 0 1rem; }
+  .stack-card__note { max-width: 40ch; font-size: 1.05rem; }
+
+  .dwg__grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .dwg { background: var(--paper-hi); border: 1px solid var(--line); border-radius: 3px; padding: 1.5rem; }
+  .dwg--wide { grid-column: 1 / -1; }
+  .dwg img { width: 100%; }
+  .dwg figcaption { margin-top: 1rem; font-size: 0.72rem; }
+
+  /* glass drawings + data panels over blurred backdrop */
+  .case__dwg { position: relative; overflow: hidden; color: var(--paper); padding-block: var(--section-y); }
+  .case__dwg-bg { position: absolute; inset: -5%; background: var(--dwgbg) center/cover no-repeat; filter: blur(30px) brightness(0.42) saturate(0.85); transform: scale(1.12); }
+  .case__dwg-bg::after { content: ''; position: absolute; inset: 0; background: rgba(16,18,20,0.55); }
+  .case__dwg-inner { position: relative; z-index: 2; }
+  .case__dwg .idx { color: rgba(245,245,241,0.55); }
+  .glass-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.3rem; }
+  .glass { background: rgba(245,245,241,0.08); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border: 1px solid rgba(245,245,241,0.18); border-radius: 10px; padding: 1.3rem; box-shadow: 0 20px 50px rgba(0,0,0,0.25); }
+  .glass--wide { grid-column: 1 / -1; }
+  .glass__media { background: var(--paper-hi); border-radius: 5px; padding: 1rem; }
+  .glass__media img { width: 100%; display: block; }
+  .glass figcaption { margin-top: 0.9rem; font-size: 0.7rem; color: rgba(245,245,241,0.7); }
+  .specs { display: flex; flex-direction: column; }
+  .specs__h { font-size: 0.68rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent-lite); margin-bottom: 1rem; }
+  .specs__list div { display: flex; justify-content: space-between; align-items: baseline; gap: 1rem; padding: 0.55rem 0; border-bottom: 1px dotted rgba(245,245,241,0.18); }
+  .specs__list dt { font-size: 0.64rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(245,245,241,0.5); }
+  .specs__list dd { font-size: 0.85rem; text-align: right; }
+  .specs__tags { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 1.2rem; }
+  .specs__tags .pill { color: var(--paper); border-color: rgba(245,245,241,0.3); }
+
+  .case__out-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+  .case__out-grid figure { overflow: hidden; }
+  .case__out-grid img { width: 100%; height: 115%; object-fit: cover; border-radius: 3px; aspect-ratio: 4/3; }
+  .case__out-grid figcaption { margin-top: 0.8rem; font-size: 0.72rem; }
+  .case__note { max-width: 40ch; margin-top: 3rem; font-family: var(--font-display); font-style: italic; font-size: 1.4rem; color: var(--ink-soft); }
+
+  .case__next { display: block; padding-block: clamp(3rem, 8vw, 6rem); margin-top: 4rem; transition: background .5s var(--ease); }
+  .case__next:hover { background: var(--charcoal-2); }
+  .case__next-inner span { color: rgba(237,228,211,0.6); }
+  .case__next h2 { font-size: clamp(2rem, 6vw, 4.5rem); font-weight: 300; margin-top: 0.6rem; transition: transform .5s var(--ease); }
+  .case__next:hover h2 { transform: translateX(1rem); }
+
+  @media (max-width: 900px) {
+    .case__brief-grid { grid-template-columns: 1fr; }
+    .dwg__grid, .case__out-grid, .glass-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .stack-card { min-height: auto; padding-block: 2.5rem; }
+    .stack-card__inner { grid-template-columns: 1fr; gap: 1.5rem; }
+  }
+  @media (max-width: 560px) { .case__facts { gap: 1.5rem; } }
+</style>
+
+<script>
+  import '@google/model-viewer';
+  // Load the light model on phones, the high-detail one on desktop.
+  const lo = window.matchMedia('(max-width: 760px)').matches;
+  document.querySelectorAll('[data-mv]').forEach((mv) => {
+    const el = mv as HTMLElement;
+    el.setAttribute('src', lo ? (el.dataset.lo || '') : (el.dataset.hi || ''));
+  });
+</script>
+
+

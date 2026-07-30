@@ -1,0 +1,224 @@
+---
+import '../styles/global.css';
+import '../styles/tailwind.css';
+import Preloader from '../components/react/Preloader.tsx';
+import site from '../data/site.json';
+
+export interface Props {
+  title?: string;
+  description?: string;
+}
+const { title = site.meta.title, description = site.meta.description } = Astro.props;
+const { identity, nav, footer, preloaderWords } = site;
+---
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#ede4d3" />
+    <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%231f2321'/%3E%3Ctext x='16' y='22' font-family='Arial' font-size='15' fill='%23ececE7' text-anchor='middle'%3ENB%3C/text%3E%3C/svg%3E" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <script is:inline>document.documentElement.classList.remove('no-js');</script>
+    <Preloader client:load words={preloaderWords} />
+    <div class="page-wipe" aria-hidden="true"></div>
+
+    <!-- ---------- NAV ---------- -->
+    <header class="nav" id="nav">
+      <div class="nav__inner wrap">
+        <a href="/" class="nav__brand">
+          <span class="nav__mono">{identity.monogram}</span>
+          <span class="nav__name">{identity.name}</span>
+        </a>
+        <nav class="nav__links">
+          {nav.map((n) => <a href={n.href}>{n.label}</a>)}
+        </nav>
+        <a href="/#contact" class="btn nav__cta">Contact</a>
+      </div>
+    </header>
+
+    <main>
+      <slot />
+    </main>
+
+    <!-- floating contact (mobile, always reachable) -->
+    <a href="/#contact" class="fab" aria-label="Contact">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 6h16v12H4z"/><path d="m4 7 8 6 8-6"/></svg>
+    </a>
+
+    <!-- ---------- FOOTER ---------- -->
+    <footer class="foot dark">
+      <div class="wrap foot__inner">
+        <span class="mono">© 2026 {identity.name}</span>
+        <span class="mono muted">{footer.tagline}</span>
+        <a href="/#contact" class="mono foot__top">Reach out ↗</a>
+      </div>
+    </footer>
+
+    <style>
+      .nav { position: fixed; inset: 0 0 auto 0; z-index: 50; transition: transform .5s var(--ease), background .5s var(--ease); }
+      .nav.hide { transform: translateY(-110%); }
+      .nav.solid { background: color-mix(in srgb, var(--paper) 82%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--line-soft); }
+      .nav__inner { display: flex; align-items: center; justify-content: space-between; padding-block: 1rem; gap: 1rem; }
+      .nav__brand { display: flex; align-items: center; gap: 0.6rem; }
+      .nav__mono { font-family: var(--font-mono); font-weight: 700; border: 1px solid var(--ink); border-radius: 6px; padding: 0.15rem 0.4rem; font-size: 0.72rem; }
+      .nav__name { font-family: var(--font-display); font-size: 1.05rem; }
+      .nav__links { display: flex; gap: 2rem; font-size: 0.9rem; }
+      .nav__links a { position: relative; padding-block: 0.2rem; }
+      .nav__links a::after { content: ''; position: absolute; left: 0; bottom: 0; width: 0; height: 1px; background: var(--terra); transition: width .4s var(--ease); }
+      .nav__links a:hover::after { width: 100%; }
+      .nav__cta { padding: 0.55rem 1.1rem; }
+
+      .fab { position: fixed; right: 1.1rem; bottom: 1.1rem; z-index: 40; width: 54px; height: 54px; border-radius: 50%; background: var(--terra); color: var(--paper-hi); display: none; align-items: center; justify-content: center; box-shadow: 0 8px 24px rgba(143,63,43,0.35); }
+
+      .foot__inner { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: space-between; align-items: center; padding-block: 2.5rem; font-size: 0.8rem; }
+      .foot__top { border-bottom: 1px solid rgba(237,228,211,0.3); }
+
+      /* page transition panel */
+      .page-wipe { position: fixed; inset: 0; z-index: 9998; background: var(--charcoal); transform: translateY(0); pointer-events: none; will-change: transform; }
+      .page-wipe::after { content: 'NB'; position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); letter-spacing: 0.3em; font-size: 0.8rem; color: var(--accent-lite); opacity: 0.8; }
+      html.no-js .page-wipe { display: none; }
+      @media (prefers-reduced-motion: reduce) { .page-wipe { display: none !important; } }
+
+      @media (max-width: 720px) {
+        .nav__links, .nav__cta { display: none; }
+        .nav__name { display: none; }
+        .fab { display: flex; }
+      }
+    </style>
+
+    <!-- ---------- MOTION: Lenis smooth scroll + GSAP reveals ---------- -->
+    <script>
+      import Lenis from 'lenis';
+      import { gsap } from 'gsap';
+      import { ScrollTrigger } from 'gsap/ScrollTrigger';
+
+      const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      gsap.registerPlugin(ScrollTrigger);
+
+      let lenis: any;
+      if (!reduce) {
+        lenis = new Lenis({ lerp: 0.09, wheelMultiplier: 1, smoothWheel: true });
+        lenis.on('scroll', ScrollTrigger.update);
+        gsap.ticker.add((t) => lenis.raf(t * 1000));
+        gsap.ticker.lagSmoothing(0);
+        // anchor links through lenis
+        document.querySelectorAll('a[href^="/#"], a[href^="#"]').forEach((a) => {
+          a.addEventListener('click', (e) => {
+            const id = a.getAttribute('href')!.split('#')[1];
+            const el = id && document.getElementById(id);
+            if (el) { e.preventDefault(); lenis.scrollTo(el, { offset: -10, duration: 1.2 }); }
+          });
+        });
+      }
+
+      // reveal animations
+      const items = gsap.utils.toArray<HTMLElement>('[data-reveal]');
+      items.forEach((el) => {
+        const delay = parseFloat(el.dataset.delay || '0');
+        gsap.to(el, {
+          opacity: 1, y: 0, duration: 1, delay, ease: 'power3.out',
+          scrollTrigger: { trigger: el, start: 'top 88%' },
+        });
+      });
+
+      // subtle parallax on [data-parallax]
+      if (!reduce) {
+        gsap.utils.toArray<HTMLElement>('[data-parallax]').forEach((el) => {
+          const amt = parseFloat(el.dataset.parallax || '12');
+          gsap.to(el, {
+            yPercent: amt, ease: 'none',
+            scrollTrigger: { trigger: el.closest('[data-parallax-scope]') || el, start: 'top bottom', end: 'bottom top', scrub: true },
+          });
+        });
+      }
+
+      const fine = window.matchMedia('(pointer: fine)').matches;
+      const wide = window.innerWidth > 860;
+
+      // magnetic hover (desktop, fine pointer only)
+      if (!reduce && fine) {
+        document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((el) => {
+          const s = parseFloat(el.dataset.magnetic || '0.3');
+          el.addEventListener('pointermove', (e) => {
+            const r = el.getBoundingClientRect();
+            gsap.to(el, { x: (e.clientX - r.left - r.width / 2) * s, y: (e.clientY - r.top - r.height / 2) * s, duration: 0.6, ease: 'power3.out' });
+          });
+          el.addEventListener('pointerleave', () => gsap.to(el, { x: 0, y: 0, duration: 0.7, ease: 'elastic.out(1, 0.4)' }));
+        });
+      }
+
+      // horizontal scroll-pan (Field Journal) — vertical scroll travels sideways
+      const pan = document.querySelector<HTMLElement>('[data-photo]');
+      const track = document.querySelector<HTMLElement>('[data-photo-track]');
+      if (pan && track && !reduce && wide) {
+        const dist = () => Math.max(0, track.scrollWidth - window.innerWidth + 80);
+        gsap.to(track, {
+          x: () => -dist(), ease: 'none',
+          scrollTrigger: { trigger: pan, start: 'top top', end: () => '+=' + dist(), pin: true, scrub: 1, invalidateOnRefresh: true },
+        });
+      }
+
+      // sticky-stack (case-study process): cards stack + scale/fade behind the next
+      // one (the cinematic effect). The LAST card also pins briefly so step 04 is
+      // clearly seen before the next section (fixes the "hidden step 4" bug).
+      const stack = document.querySelector<HTMLElement>('[data-stack]');
+      if (stack && !reduce && window.innerWidth > 760) {
+        const cards = gsap.utils.toArray<HTMLElement>('.stack-card');
+        const last = cards.length - 1;
+        cards.forEach((card, i) => {
+          if (i < last) {
+            ScrollTrigger.create({ trigger: card, start: 'top top', endTrigger: cards[last], end: 'top top', pin: true, pinSpacing: false });
+            gsap.to(card, { scale: 0.92, opacity: 0.55, ease: 'none', scrollTrigger: { trigger: cards[i + 1], start: 'top bottom', end: 'top top', scrub: true } });
+          } else {
+            ScrollTrigger.create({ trigger: card, start: 'top top', end: '+=75%', pin: true, pinSpacing: true, anticipatePin: 1 });
+          }
+        });
+      }
+
+      // nav show/hide + solid
+      const nav = document.getElementById('nav')!;
+      let last = 0;
+      const onScroll = () => {
+        const y = window.scrollY;
+        nav.classList.toggle('solid', y > 40);
+        nav.classList.toggle('hide', y > last && y > 400);
+        last = y;
+      };
+      window.addEventListener('scroll', onScroll, { passive: true });
+
+      // Recompute scroll dimensions after the preloader releases the page —
+      // otherwise Lenis measured a locked (0-height) body and scroll stays frozen.
+      const refreshAll = () => { try { lenis && lenis.resize(); } catch (e) {} ScrollTrigger.refresh(); };
+      window.addEventListener('preloader:done', () => { document.body.style.overflow = ''; setTimeout(refreshAll, 60); });
+      window.addEventListener('load', () => setTimeout(refreshAll, 150));
+      setTimeout(refreshAll, 1500);
+
+      // ---------- professional page transition (panel sweeps up, then reveals) ----------
+      const wipe = document.querySelector<HTMLElement>('.page-wipe');
+      if (wipe && !reduce) {
+        // arrival: panel exits upward to reveal the page, then parks below
+        gsap.to(wipe, { yPercent: -101, duration: 0.7, ease: 'power3.inOut', delay: 0.05,
+          onComplete: () => gsap.set(wipe, { yPercent: 101 }) });
+        // outgoing: cover the screen, then navigate (delegated → also catches React island links)
+        document.addEventListener('click', (e) => {
+          const a = (e.target as HTMLElement).closest('a') as HTMLAnchorElement | null;
+          if (!a) return;
+          const href = a.getAttribute('href') || '';
+          const internal = href.startsWith('/projects/') || href === '/';
+          if (!internal || a.target === '_blank' || e.metaKey || e.ctrlKey || e.shiftKey) return;
+          e.preventDefault();
+          gsap.fromTo(wipe, { yPercent: 101 }, { yPercent: 0, duration: 0.55, ease: 'power3.inOut',
+            onComplete: () => { window.location.href = href; } });
+        });
+      } else if (wipe) {
+        wipe.style.display = 'none';
+      }
+    </script>
+  </body>
+</html>
+
+
