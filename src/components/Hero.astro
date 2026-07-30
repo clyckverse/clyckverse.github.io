@@ -55,7 +55,7 @@ const heroMobile = listVideos('mobile');
 </section>
 
 <style>
-  .hero { height: 280vh; position: relative; }
+  .hero { height: 420vh; position: relative; }
   .hero__stage { position: sticky; top: 0; height: 100vh; overflow: hidden; background: var(--charcoal); }
   .hero__media { position: absolute; inset: 0; }
   .hero__poster, .hero__video {
@@ -113,8 +113,9 @@ const heroMobile = listVideos('mobile');
   const introEl = document.querySelector<HTMLElement>('.hero__intro');
   const copies = Array.from(document.querySelectorAll<HTMLElement>('[data-hero-copy]'));
 
-  // Scrub range: clean clips use most of the clip; the intro1 fallback skips its garbled tail.
-  let SCRUB_END = 0.95;
+  // For 10s videos: only scrub the first 60% (~6s). The start of H.264 files
+  // has dense keyframes → fast seeks. The tail is keyframe-sparse → jank.
+  let SCRUB_END = 0.60;
 
   if (section && video && !reduce) {
     // intro now lives inside the hero end → hide the standalone intro section
@@ -179,13 +180,20 @@ const heroMobile = listVideos('mobile');
     window.addEventListener('resize', compute);
     compute();
 
+    // Throttle seeks to max 30 fps — never hammer the decoder faster than
+    // it can decode (critical for 10s videos with sparse keyframes).
+    let lastSeekAt = 0;
+    const SEEK_INTERVAL = 1000 / 30; // ~33 ms between seeks
+
     const loop = () => {
-      current += (target - current) * 0.12;   // faster lerp → less lag
+      current += (target - current) * 0.10;
       if (ready && video.duration && !seeking) {
         const t = current * SCRUB_END * video.duration;
-        if (Math.abs(video.currentTime - t) > 0.04) {  // skip tiny seeks
+        const now = performance.now();
+        // only seek if time moved meaningfully AND enough real time has passed
+        if (Math.abs(video.currentTime - t) > 0.05 && now - lastSeekAt > SEEK_INTERVAL) {
           seeking = true;
-          // fastSeek() is much cheaper than currentTime= (less decode work)
+          lastSeekAt = now;
           if ((video as any).fastSeek) (video as any).fastSeek(t);
           else video.currentTime = t;
         }
