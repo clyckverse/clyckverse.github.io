@@ -1,13 +1,13 @@
 {
- "title": "Riverside Pavilion",
+ "title": "Multi-purpose Community Building",
  "year": "2025",
- "type": "Public / Cultural",
+ "type": "Public / Community",
  "role": "Design, drawings, physical model & 3D",
- "location": "Studio III · Riverfront site",
+ "location": "Studio III · Year 3",
  "order": 1,
- "summary": "A low, cantilevered reading pavilion that lets the river walk straight through it.",
- "brief": "The brief asked for a small public room on a flood-prone riverbank. Rather than resist the water, the pavilion lifts onto a thin plinth and lets the ground slip beneath a deep cantilever, so the public path never stops. Light enters low and long; the timber core anchors what the glass dissolves.",
- "note": "The pavilion began as a question: can a public room disappear when the river rises, and reappear when it falls? Everything in the project answers that.",
+ "summary": "A community building that holds a 5,000 sf sanctuary, a 2,000 sf multipurpose hall, and a ring of support spaces — designed so each wing can operate independently or together.",
+ "brief": "The brief asked for a building that could serve a neighbourhood across different times of day and week: a place of gathering on weekends, a community sports hall on weekday evenings, and administrative offices in between. The design resolves this by placing the sanctuary and multipurpose hall as two large volumes that share a common welcome lobby — so circulation is clear and each space can be locked off without affecting the others. Support spaces (offices, kitchen, bathrooms) are compressed into a single service bar along the south edge.",
+ "note": "The design began with a single question: how do you make a building feel full even when only one wing is in use? The answer was the lobby — a shared threshold that anchors both halves and keeps the building alive at any occupancy.",
  "tools": [
    "Hand drawing",
    "AutoCAD",
@@ -15,23 +15,23 @@
    "3D modelling"
  ],
  "tags": [
-   "Cantilever",
-   "Timber core",
-   "Public room"
+   "Community",
+   "Multipurpose",
+   "Public Hall"
  ],
  "model": "model.glb",
  "hero": "hero.jpg",
  "render": "render.jpg",
- "modelPhoto": "model-photo.jpg",
+ "modelPhoto": "model-photo.png",
  "drawings": [
    {
      "file": "plan.svg",
-     "caption": "Floor plan · 1:100",
+     "caption": "Ground floor plan · 1:100",
      "wide": true
    },
    {
      "file": "section.svg",
-     "caption": "Section AA · 1:100"
+     "caption": "Section AA through sanctuary · 1:100"
    },
    {
      "file": "elevation.svg",
@@ -42,26 +42,23 @@
  "process": [
    {
      "stage": "Concept sketch",
-     "note": "First idea in pencil — the roof as a single held gesture over the path.",
+     "note": "First idea — two large volumes sharing a single lobby, with all services compressed to one edge.",
      "media": "elevation.svg"
    },
    {
      "stage": "Developed drawings",
-     "note": "Plan, section and elevation resolved in AutoCAD to test the cantilever depth.",
+     "note": "Plan and section resolved in AutoCAD, testing sightlines from the sanctuary stage and natural light into the hall.",
      "media": "plan.svg"
    },
    {
      "stage": "Physical model",
-     "note": "1:100 balsa study to read the light under the overhang.",
-     "media": "model-photo.jpg"
+     "note": "1:100 cardboard model to test roof massing, entrance approach, and scale of the two volumes side by side.",
+     "media": "model-photo.png"
    },
    {
      "stage": "3D model",
-     "note": "Digital massing to check proportion from the approach.",
+     "note": "Digital massing to check proportions, roof heights, and the relationship of the building to the street.",
      "media": "render.jpg"
    }
  ]
 }
-
-
-
