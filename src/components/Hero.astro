@@ -183,7 +183,7 @@ const heroMobile = listVideos('mobile');
     // Throttle seeks to max 30 fps — never hammer the decoder faster than
     // it can decode (critical for 10s videos with sparse keyframes).
     let lastSeekAt = 0;
-    const SEEK_INTERVAL = 1000 / 30; // ~33 ms between seeks
+    const SEEK_INTERVAL = 1000 / 20; // matches 20fps mobile clips
 
     const loop = () => {
       current += (target - current) * 0.10;

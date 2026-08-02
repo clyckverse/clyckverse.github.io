@@ -1,60 +1,67 @@
 {
- "meta": {
-   "title": "Nisshkaa Bhansaly — Architecture & Photography",
-   "description": "Portfolio of Nisshkaa Bhansaly — third-year architecture student and photographer. Buildings, drawings, models, and the built world through a camera."
- },
- "identity": {
-   "name": "Nisshkaa Bhansaly",
-   "monogram": "NB",
-   "email": "nisshkaa@example.com",
-   "instagram": "https://instagram.com",
-   "availability": "Available for internship · Summer 2026"
- },
- "nav": [
-   { "label": "Work", "href": "/#work" },
-   { "label": "Photography", "href": "/#photography" },
-   { "label": "About", "href": "/#about" }
- ],
- "preloaderWords": ["Sketch", "Model", "Draft", "Nisshkaa Bhansaly"],
- "hero": {
-   "eyebrow": "Architecture · Photography",
-   "firstName": "Nisshkaa",
-   "lastName": "Bhansaly",
-   "tagline": "A third-year architecture student who builds space by hand, in models and in 3D — and reads the built world through a camera."
- },
- "intro": {
-   "leadHtml": "I design buildings the slow way — pencil first, then models I can hold, then drawings and 3D. And I photograph the built world the way I read it: <em>light, geometry, and the marks people leave on it.</em> One eye, two crafts.",
-   "skills": ["Hand drawing", "Technical drafting", "Physical models", "AutoCAD 3D", "Architectural photography"]
- },
- "work": {
-   "heading": "Selected work",
-   "pageSize": 4
- },
- "photography": {
-   "heading": "Field journal",
-   "intro": "Not documentation — an archive of how I see. Each frame is a place and a moment.",
-   "hint": "Scroll to walk the street ↔"
- },
- "about": {
-   "portrait": "/about/her-sketch.jpg",
-   "portraitNote": "Illustration slot — replace with your colour sketch",
-   "statusPill": "3rd year · Available Summer 2026",
-   "lead": "I'm Nisshkaa — a third-year architecture student who believes a building is only as good as the thinking you can see behind it.",
-   "body": "I work across hand drawing, technical drafting, physical model-making and digital 3D, and I photograph architecture wherever I travel. The camera keeps my architecture honest; the architecture teaches me how to look. I'm looking for a studio internship where I can keep making — and keep learning.",
-   "facts": [
-     { "label": "Studying", "value": "B.Arch, third year" },
-     { "label": "Tools", "value": "Pencil · AutoCAD · Physical models · 3D" },
-     { "label": "Based", "value": "India · open to relocate" }
-   ]
- },
- "contact": {
-   "heading": "Let's build\nsomething.",
-   "availability": "Available for internship · Summer 2026"
- },
- "footer": {
-   "tagline": "Architecture · Photography · Third year"
- }
+"meta": {
+  "title": "Nisshkaa Bhansaly — Architecture & Photography",
+  "description": "Portfolio of Nisshkaa Bhansaly — third-year architecture student and photographer. Buildings, drawings, models, and the built world through a camera."
+},
+"identity": {
+  "name": "Nisshkaa Bhansaly",
+  "monogram": "NB",
+  "email": "nisshkaa@example.com",
+  "instagram": "https://instagram.com",
+  "availability": "Available for internship · Summer 2026"
+},
+"nav": [
+  { "label": "Work", "href": "/#work" },
+  { "label": "Photography", "href": "/#photography" },
+  { "label": "About", "href": "/#about" }
+],
+"preloaderWords": ["Sketch", "Model", "Draft", "Nisshkaa Bhansaly"],
+"hero": {
+  "eyebrow": "Architecture · Photography",
+  "firstName": "Nisshkaa",
+  "lastName": "Bhansaly",
+  "tagline": "A third-year architecture student who builds space by hand, in models and in 3D — and reads the built world through a camera."
+},
+"intro": {
+  "leadHtml": "I design buildings the slow way — pencil first, then models I can hold, then drawings and 3D. And I photograph the built world the way I read it: <em>light, geometry, and the marks people leave on it.</em> One eye, two crafts.",
+  "skills": ["Hand drawing", "Technical drafting", "Physical models", "AutoCAD 3D", "Architectural photography"]
+},
+"work": {
+  "heading": "Selected work",
+  "pageSize": 4
+},
+"photography": {
+  "heading": "Field journal",
+  "intro": "Not documentation — an archive of how I see. Each frame is a place and a moment.",
+  "hint": "Scroll to walk the street ↔"
+},
+"about": {
+  "portrait": "/about/her-sketch.jpg",
+  "portraitNote": "Illustration slot — replace with your colour sketch",
+  "statusPill": "3rd year · Available Summer 2026",
+  "lead": "I'm Nisshkaa — a third-year architecture student who believes a building is only as good as the thinking you can see behind it.",
+  "body": "I work across hand drawing, technical drafting, physical model-making and digital 3D, and I photograph architecture wherever I travel. The camera keeps my architecture honest; the architecture teaches me how to look. I'm looking for a studio internship where I can keep making — and keep learning.",
+  "facts": [
+    { "label": "Studying", "value": "B.Arch, third year" },
+    { "label": "Tools", "value": "Pencil · AutoCAD · Physical models · 3D" },
+    { "label": "Based", "value": "India · open to relocate" }
+  ]
+},
+"contact": {
+  "heading": "Let's build\nsomething.",
+  "availability": "Available for internship · Summer 2026"
+},
+"footer": {
+  "tagline": "Architecture · Photography · Third year"
 }
+}
+
+
+
+
+
+
+
 
 
 
