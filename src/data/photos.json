@@ -1,55 +1,98 @@
 [
- {
-   "src": "/photos/journal-1.jpg",
-   "location": "Fort Kochi, Kerala",
-   "date": "2025-11-04",
-   "caption": "Colonial arch, mid-repair. The scaffolding drew a better façade than the building."
- },
- {
-   "src": "/photos/journal-2.jpg",
-   "location": "Connaught Place, Delhi",
-   "date": "2025-09-18",
-   "caption": "Colonnade at noon — the shadows are the architecture."
- },
- {
-   "src": "/photos/journal-3.jpg",
-   "location": "Hampi, Karnataka",
-   "date": "2025-07-22",
-   "caption": "Stone against sky. Nothing has been added here in six hundred years."
- },
- {
-   "src": "/photos/journal-4.jpg",
-   "location": "Bandra, Mumbai",
-   "date": "2025-06-30",
-   "caption": "Graffiti on a service wall — the city writing over itself."
- },
- {
-   "src": "/photos/journal-5.jpg",
-   "location": "Chandigarh Capitol",
-   "date": "2025-05-11",
-   "caption": "Le Corbusier's concrete, softened only by weather."
- },
- {
-   "src": "/photos/journal-6.jpg",
-   "location": "Jaipur, Rajasthan",
-   "date": "2025-03-09",
-   "caption": "A lattice screen turning harsh light into pattern."
- },
- {
-   "src": "/photos/journal-7.jpg",
-   "location": "Panaji, Goa",
-   "date": "2025-02-14",
-   "caption": "A blue stair to nowhere I was allowed to go."
- },
- {
-   "src": "/photos/journal-8.jpg",
-   "location": "Ahmedabad, Gujarat",
-   "date": "2025-01-27",
-   "caption": "Step-well geometry — a building you read by descending."
- }
+  {
+    "src": "/photos/journal-1.jpg",
+    "location": "Oman Airport",
+    "date": "2024-12-10",
+    "caption": "The hangar mouth frames it better than any terminal gate — the plane, held still in a dark rectangle of concrete."
+  },
+  {
+    "src": "/photos/journal-2.jpg",
+    "location": "Mumbai",
+    "date": "2024-11-18",
+    "caption": "Tensile canopies in a row, a person at the peak. The structure is the silhouette."
+  },
+  {
+    "src": "/photos/journal-3.jpg",
+    "location": "Museum Interior, Mumbai",
+    "date": "2024-10-05",
+    "caption": "A child sits where the arch meets the light. Everything else is shadow and LED."
+  },
+  {
+    "src": "/photos/journal-4.jpg",
+    "location": "Old Quarter, Mumbai",
+    "date": "2024-09-22",
+    "caption": "The alley compresses everything — balconies, pipes, daylight — into one narrow slice of city."
+  },
+  {
+    "src": "/photos/journal-5.jpg",
+    "location": "Mumbai",
+    "date": "2024-08-14",
+    "caption": "A building facade at dusk: grid against sky, palm trees holding the edge."
+  },
+  {
+    "src": "/photos/journal-6.jpg",
+    "location": "Mumbai",
+    "date": "2024-07-30",
+    "caption": "An old bungalow holding its ground. Hanging plants, orange shutters, a modern block rising quietly behind."
+  },
+  {
+    "src": "/photos/journal-7.jpg",
+    "location": "Gateway of India, Mumbai",
+    "date": "2024-06-21",
+    "caption": "The harbour on a grey day — ferries packed together like they are in no hurry at all."
+  },
+  {
+    "src": "/photos/journal-8.jpg",
+    "location": "Old City, Mumbai",
+    "date": "2024-05-09",
+    "caption": "A carved teak door from another century, still answering to the street."
+  },
+  {
+    "src": "/photos/journal-9.jpg",
+    "location": "Taj Mahal Palace, Mumbai",
+    "date": "2024-04-17",
+    "caption": "Indo-Saracenic in monochrome — the ornament reads louder without colour."
+  },
+  {
+    "src": "/photos/journal-10.jpg",
+    "location": "Old Neighbourhood, Mumbai",
+    "date": "2024-03-28",
+    "caption": "The curved stair bisects a wall of hard light. Plants below, washing above."
+  },
+  {
+    "src": "/photos/journal-11.jpg",
+    "location": "Lane, Mumbai",
+    "date": "2024-02-14",
+    "caption": "A lane compressed to a slit of blue sky — a figure, an auto, a flag making it lived-in."
+  },
+  {
+    "src": "/photos/journal-12.jpg",
+    "location": "Fatma Villa, Mumbai",
+    "date": "2024-01-26",
+    "caption": "Fatma Villa, 1936. The ochre wall keeps its date on a small plaque while the street moves past."
+  },
+  {
+    "src": "/photos/journal-13.jpg",
+    "location": "Old Colony, Mumbai",
+    "date": "2023-12-20",
+    "caption": "Tiled roofs, latticed walls, one modern tower in the distance: the city in three layers."
+  },
+  {
+    "src": "/photos/journal-14.jpg",
+    "location": "ISKCON Temple, Juhu, Mumbai",
+    "date": "2023-11-11",
+    "caption": "The temple gate in deep red under a blue sky — ornament as elevation."
+  },
+  {
+    "src": "/photos/journal-15.jpg",
+    "location": "Smritivan Museum, Bhuj, Gujarat",
+    "date": "2023-10-02",
+    "caption": "Tensile canopy from below at the Earthquake Museum — geometry that remembers by sheltering."
+  },
+  {
+    "src": "/photos/journal-16.jpg",
+    "location": "Bandra–Worli Sea Link, Mumbai",
+    "date": "2023-09-08",
+    "caption": "Cable-stayed geometry at dusk, a crescent moon caught in the pylon cables."
+  }
 ]
-
-
-
-
-
